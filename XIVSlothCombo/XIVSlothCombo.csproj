@@ -13,9 +13,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-		<DalamudPluginPath>$(appdata)\XIVLauncher\installedPlugins\XIVSlothCombo\$(version)</DalamudPluginPath>
-		<DalamudDevPlugins>$(appdata)\XIVLauncher\devPlugins\XIVSlothCombo\</DalamudDevPlugins>
+		<DalamudLibPath>D:\Games\FFXIVLauncher\XIVLauncherCN\Roaming\addon\Hooks\dev\</DalamudLibPath>
+		<DalamudPluginPath>D:\Games\FFXIVLauncher\XIVLauncherCN\Roaming\installedPlugins\XIVSlothCombo\$(version)</DalamudPluginPath>
+		<DalamudDevPlugins>D:\Games\FFXIVLauncher\XIVLauncherCN\Roaming\devPlugins\XIVSlothCombo\</DalamudDevPlugins>
 		<AssemblyName>XIVSlothCombo</AssemblyName>
 		<RootNamespace>XIVSlothCombo</RootNamespace>
 		<PackageId>XIVSlothCombo</PackageId>

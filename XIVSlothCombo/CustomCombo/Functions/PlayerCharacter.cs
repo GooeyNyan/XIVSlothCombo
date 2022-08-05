@@ -1,7 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using XIVSlothCombo.Services;
-using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
+/// using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
 {
@@ -29,6 +29,6 @@ namespace XIVSlothCombo.CustomComboNS.Functions
 
         /// <summary> Checks if the player is in a PVP enabled zone. </summary>
         /// <returns> A value indicating whether the player is in a PVP enabled zone. </returns>
-        public static bool InPvP() => GameMain.IsInPvPArea() || GameMain.IsInPvPInstance();
+        public static bool InPvP() => false;
     }
 }

@@ -76,7 +76,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (InCombat())
                     {
                         // oGCDs
-                        if (CanWeave(actionID))
+                        if (CanWeave(actionID, 0))
                         {
                             //Mana Features
                             if (IsEnabled(CustomComboPreset.DRK_ManaOvercap))
@@ -186,7 +186,7 @@ namespace XIVSlothCombo.Combos.PvE
                 {
                     var gauge = GetJobGauge<DRKGauge>();
 
-                    if (CanWeave(actionID))
+                    if (CanWeave(actionID, 0))
                     {
                         if (IsEnabled(CustomComboPreset.DRK_AoE_ManaOvercap) && LevelChecked(FloodOfDarkness) && (gauge.HasDarkArts || LocalPlayer.CurrentMp > 8500 || (gauge.DarksideTimeRemaining < 10 && LocalPlayer.CurrentMp >= 3000)))
                             return OriginalHook(FloodOfDarkness);

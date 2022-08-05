@@ -296,7 +296,7 @@ namespace XIVSlothCombo.Combos.PvE
                     bool sidewinderReady = LevelChecked(Sidewinder) && IsOffCooldown(Sidewinder);
 
                     if (LevelChecked(WanderersMinuet) && songWanderer && gauge.Repertoire == 3)
-                        return OriginalHook(WanderersMinuet);
+                        return OriginalHook(PitchPerfect);
                     if (empyrealReady)
                         return EmpyrealArrow;
                     if (bloodletterReady)
@@ -350,7 +350,7 @@ namespace XIVSlothCombo.Combos.PvE
                         bool sidewinderReady = LevelChecked(Sidewinder) && IsOffCooldown(Sidewinder);
 
                         if (LevelChecked(PitchPerfect) && songWanderer && gauge.Repertoire == 3)
-                            return OriginalHook(WanderersMinuet);
+                            return OriginalHook(PitchPerfect);
                         if (empyrealReady)
                             return EmpyrealArrow;
                         if (rainOfDeathReady)
@@ -404,7 +404,7 @@ namespace XIVSlothCombo.Combos.PvE
                     }
 
                     if (songWanderer && gauge.Repertoire == 3)
-                        return OriginalHook(WanderersMinuet);
+                        return OriginalHook(PitchPerfect);
                     if (empyrealReady)
                         return EmpyrealArrow;
                     if (bloodletterReady)
@@ -509,7 +509,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 if (songWanderer)
                                 {
                                     if (songTimerInSeconds < 3 && gauge.Repertoire > 0) // Spend any repertoire before switching to next song
-                                        return OriginalHook(WanderersMinuet);
+                                        return OriginalHook(PitchPerfect);
                                     if (songTimerInSeconds < 3 && balladReady)          // Move to Mage's Ballad if < 3 seconds left on song
                                         return MagesBallad;
                                 }
@@ -603,7 +603,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (LevelChecked(PitchPerfect) && songWanderer &&
                             (gauge.Repertoire == 3 || (gauge.Repertoire == 2 && empyrealCD < 2)) &&
                             (!openerFinished || (openerFinished && battleVoiceCD >= 3.5)))
-                            return OriginalHook(WanderersMinuet);
+                            return OriginalHook(PitchPerfect);
 
                         if (sidewinderReady && (!openerFinished || (openerFinished && battleVoiceCD >= 3.5)))
                         {
@@ -804,14 +804,14 @@ namespace XIVSlothCombo.Combos.PvE
                         if (magesBalladReady)
                         {
                             if (songWanderer && gauge.Repertoire > 0)
-                                return OriginalHook(WanderersMinuet);
+                                return OriginalHook(PitchPerfect);
                             return MagesBallad;
                         }
 
                         if (armysPaeonReady)
                         {
                             if (songWanderer && gauge.Repertoire > 0)
-                                return OriginalHook(WanderersMinuet);
+                                return OriginalHook(PitchPerfect);
                             return ArmysPaeon;
                         }
                     }

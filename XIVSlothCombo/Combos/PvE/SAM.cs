@@ -1,7 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Objects.Enums;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
 
@@ -33,7 +31,7 @@ namespace XIVSlothCombo.Combos.PvE
             Higanbana = 7489,
             TenkaGoken = 7488,
             Setsugekka = 7487,
-            Shinten = 7490,
+            Shinten = 74900,
             Kyuten = 7491,
             Hagakure = 7495,
             Guren = 7496,
@@ -51,6 +49,7 @@ namespace XIVSlothCombo.Combos.PvE
             OgiNamikiri = 25781,
             KaeshiNamikiri = 25782,
             Yaten = 7493,
+            Kaiten = 7494,
             Gyoten = 7492;
 
         public static class Buffs
@@ -61,6 +60,7 @@ namespace XIVSlothCombo.Combos.PvE
                 EyesOpen = 1252,
                 OgiNamikiriReady = 2959,
                 Fuka = 1299,
+                Kaiten = 1229,
                 Fugetsu = 1298;
         }
 
@@ -173,7 +173,17 @@ namespace XIVSlothCombo.Combos.PvE
                         if (!inOpener)
                         {
                             if (IsEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_OgiNamikiri) && (gauge.Kaeshi == Kaeshi.NAMIKIRI))
+                            {
+                                if (gauge.Kaeshi != Kaeshi.NAMIKIRI)
+                                {
+                                    if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                    {
+                                        return OriginalHook(Kaiten);
+                                    }
+                                }
                                 return OriginalHook(OgiNamikiri);
+                            }
+                                
 
                             if (IsEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_Iaijutsu) && LevelChecked(TsubameGaeshi) && GetRemainingCharges(TsubameGaeshi) > 0 && (gauge.Kaeshi == Kaeshi.GOKEN || gauge.Kaeshi == Kaeshi.SETSUGEKKA))
                                 return OriginalHook(TsubameGaeshi);
@@ -192,11 +202,11 @@ namespace XIVSlothCombo.Combos.PvE
 
                                 if (twoSeal && gauge.MeditationStacks == 0 && GetCooldownRemainingTime(Ikishoten) < 110 && IsOnCooldown(Ikishoten))
                                 {
-                                    if (gauge.Kenki >= 10 && IsOffCooldown(Gyoten))
-                                        return Gyoten;
+                                    ///if (gauge.Kenki >= 10 && IsOffCooldown(Gyoten))
+                                    ///    return Gyoten;
 
-                                    if (gauge.Kenki >= 25)
-                                        return Shinten;
+                                    /// if (gauge.Kenki >= 25)
+                                        /// return Shinten;
                                 }
 
                                 if (twoSeal && IsOffCooldown(Ikishoten))
@@ -205,7 +215,7 @@ namespace XIVSlothCombo.Combos.PvE
                                 if (gauge.Kenki >= 25)
                                 {
                                     if (oneSeal && GetRemainingCharges(MeikyoShisui) == 0 && oneSeal)
-                                        return Shinten;
+                                        /// return Shinten;
 
                                     if (GetRemainingCharges(MeikyoShisui) == 1 && IsOffCooldown(Senei) && (gauge.Kaeshi == Kaeshi.SETSUGEKKA || gauge.Sen == Sen.NONE))
                                         return Senei;
@@ -214,19 +224,35 @@ namespace XIVSlothCombo.Combos.PvE
                                 if (gauge.Sen == Sen.NONE && GetRemainingCharges(MeikyoShisui) == 1)
                                     return MeikyoShisui;
 
-                                if (gauge.Kenki >= 25 && IsOnCooldown(Shoha))
-                                    return Shinten;
+                                /// if (gauge.Kenki >= 25 && IsOnCooldown(Shoha))
+                                    /// return Shinten;
                             }
 
                             //GCDs
                             if ((twoSeal && lastComboMove == Yukikaze) ||
                                 (threeSeal && (GetRemainingCharges(MeikyoShisui) == 1 || !HasEffect(Buffs.OgiNamikiriReady))) ||
-                                (oneSeal && !TargetHasEffect(Debuffs.Higanbana) && GetRemainingCharges(TsubameGaeshi) == 1))
+                                (oneSeal && !TargetHasEffect(Debuffs.Higanbana) && GetRemainingCharges(TsubameGaeshi) == 1)) {
+                                if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                {
+                                    return OriginalHook(Kaiten);
+                                }
                                 return OriginalHook(Iaijutsu);
+                            }
 
-                            if ((gauge.Kaeshi == Kaeshi.NAMIKIRI) ||
-                                (oneSeal && TargetHasEffect(Debuffs.Higanbana) && HasEffect(Buffs.OgiNamikiriReady)))
+                            if (gauge.Kaeshi == Kaeshi.NAMIKIRI) 
+                            {
                                 return OriginalHook(OgiNamikiri);
+                            }
+
+                            if (oneSeal && TargetHasEffect(Debuffs.Higanbana) && HasEffect(Buffs.OgiNamikiriReady))
+                            {
+                                if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                {
+                                    return OriginalHook(Kaiten);
+                                }
+                                return OriginalHook(OgiNamikiri);
+                            }
+                                
 
                             if (gauge.Kaeshi == Kaeshi.SETSUGEKKA || gauge.Kaeshi == Kaeshi.GOKEN)
                                 return OriginalHook(TsubameGaeshi);
@@ -422,7 +448,7 @@ namespace XIVSlothCombo.Combos.PvE
                                         }
                                     }
 
-                                    if (LevelChecked(Shinten) && gauge.Kenki >= 25)
+                                    if (LevelChecked(Shinten) && gauge.Kenki >= 45)
                                     {
                                         if (GetCooldownRemainingTime(Senei) > 110 || (IsEnabled(CustomComboPreset.SAM_ST_Overcap) && gauge.Kenki >= SamKenkiOvercapAmount))
                                             return Shinten;
@@ -466,8 +492,14 @@ namespace XIVSlothCombo.Combos.PvE
                                     {
                                         if (((oneSeal || (oneSeal && meikyostacks == 2)) && GetDebuffRemainingTime(Debuffs.Higanbana) <= 10) ||
                                             (twoSeal && !LevelChecked(Setsugekka)) ||
-                                            (threeSeal && LevelChecked(Setsugekka)))
+                                            (threeSeal && LevelChecked(Setsugekka))) {
+                                            if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                            {
+                                                return OriginalHook(Kaiten);
+                                            }
                                             return OriginalHook(Iaijutsu);
+                                        }
+                                            
                                     }
                                 }
 
@@ -477,12 +509,32 @@ namespace XIVSlothCombo.Combos.PvE
                                     if ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi == Kaeshi.NAMIKIRI)
                                     {
                                         if (IsNotEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_OgiNamikiri_Burst))
+                                        {
+                                            if (gauge.Kaeshi != Kaeshi.NAMIKIRI) 
+                                            {
+                                                if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                                {
+                                                    return OriginalHook(Kaiten);
+                                                }
+                                            }
                                             return OriginalHook(OgiNamikiri);
+                                        }
+                                            
 
                                         if (IsEnabled(CustomComboPreset.SAM_ST_GekkoCombo_CDs_OgiNamikiri_Burst))
                                         {
                                             if (hasDied || nonOpener || (meikyostacks == 1 && GetDebuffRemainingTime(Debuffs.Higanbana) >= 45 && HasEffect(Buffs.MeikyoShisui)) || GetCooldownRemainingTime(Ikishoten) <= 105)
+                                            {
+                                                if (gauge.Kaeshi != Kaeshi.NAMIKIRI)
+                                                {
+                                                    if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                                    {
+                                                        return OriginalHook(Kaiten);
+                                                    }
+                                                }
                                                 return OriginalHook(OgiNamikiri);
+                                            }
+                                                
                                         }
                                     }
                                 }
@@ -613,13 +665,28 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_OgiNamikiri) && LevelChecked(OgiNamikiri))
                     {
                         if ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi == Kaeshi.NAMIKIRI)
+                        {
+                            if (gauge.Kaeshi != Kaeshi.NAMIKIRI)
+                            {
+                                if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                {
+                                    return OriginalHook(Kaiten);
+                                }
+                            }
                             return OriginalHook(OgiNamikiri);
+                        }
+                            
                     }
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_MangetsuCombo_TenkaGoken) && LevelChecked(TenkaGoken))
                     {
-                        if (!IsMoving && (OriginalHook(Iaijutsu) == TenkaGoken || (OriginalHook(Iaijutsu) == Setsugekka && LevelChecked(Setsugekka))))
+                        if (!IsMoving && (OriginalHook(Iaijutsu) == TenkaGoken || (OriginalHook(Iaijutsu) == Setsugekka && LevelChecked(Setsugekka)))) {
+                            if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                            {
+                                return OriginalHook(Kaiten);
+                            }
                             return OriginalHook(Iaijutsu);
+                        }
 
                         if (gauge.Kaeshi == Kaeshi.GOKEN && LevelChecked(TsubameGaeshi) && GetRemainingCharges(TsubameGaeshi) > 0)
                             return OriginalHook(TsubameGaeshi);
@@ -719,8 +786,13 @@ namespace XIVSlothCombo.Combos.PvE
                         if (LevelChecked(TsubameGaeshi) && gauge.Kaeshi == Kaeshi.SETSUGEKKA && GetRemainingCharges(TsubameGaeshi) > 0)
                             return OriginalHook(TsubameGaeshi);
 
-                        if (LevelChecked(Setsugekka) && OriginalHook(Iaijutsu) == Setsugekka)
+                        if (LevelChecked(Setsugekka) && OriginalHook(Iaijutsu) == Setsugekka) {
+                            if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                            {
+                                return OriginalHook(Kaiten);
+                            }
                             return OriginalHook(Iaijutsu);
+                        }
 
                         if (comboTime > 0)
                         {
@@ -790,10 +862,25 @@ namespace XIVSlothCombo.Combos.PvE
                         return Shoha;
 
                     if (IsEnabled(CustomComboPreset.SAM_Iaijutsu_OgiNamikiri) && LevelChecked(OgiNamikiri) && (gauge.Kaeshi == Kaeshi.NAMIKIRI || HasEffect(Buffs.OgiNamikiriReady)))
+                    {
+                        if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                        {
+                            return OriginalHook(Kaiten);
+                        }
                         return OriginalHook(OgiNamikiri);
+                    }
+                        
 
                     if (IsEnabled(CustomComboPreset.SAM_Iaijutsu_TsubameGaeshi) && LevelChecked(TsubameGaeshi) && gauge.Kaeshi != Kaeshi.NONE)
                         return OriginalHook(TsubameGaeshi);
+                    else if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                    {
+                        var oneSeal = OriginalHook(Iaijutsu) == Higanbana;
+                        var twoSeal = OriginalHook(Iaijutsu) == TenkaGoken;
+                        var threeSeal = OriginalHook(Iaijutsu) == Setsugekka;
+                        if (oneSeal || twoSeal || threeSeal)
+                        return OriginalHook(Kaiten);
+                    }
                 }
 
                 return actionID;
@@ -846,6 +933,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
+                var gauge = GetJobGauge<SAMGauge>();
                 if (actionID == Ikishoten)
                 {
                     if (LevelChecked(OgiNamikiri))
@@ -853,11 +941,23 @@ namespace XIVSlothCombo.Combos.PvE
                         if (HasEffect(Buffs.OgiNamikiriReady))
                         {
                             if (HasEffect(Buffs.OgiNamikiriReady))
+                            {
+                                if (GetBuffRemainingTime(Buffs.Kaiten) == 0)
+                                {
+                                    return Kaiten;
+                                }
+                                if (LevelChecked(Shoha) && gauge.MeditationStacks == 3 && GetCooldownRemainingTime(Shoha) == 0)
+                                    return Shoha;
                                 return OgiNamikiri;
+                            }
                         }
 
                         if (OriginalHook(OgiNamikiri) == KaeshiNamikiri)
+                        {
+                            if (LevelChecked(Shoha) && gauge.MeditationStacks == 3)
+                                return Shoha;
                             return KaeshiNamikiri;
+                        }
                     }
 
                     return Ikishoten;
