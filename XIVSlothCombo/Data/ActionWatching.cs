@@ -78,7 +78,7 @@ namespace XIVSlothCombo.Data
 
         public static void OutputLog()
         {
-            Service.ChatGui.Print($"You just used: {GetActionName(LastAction)} x{LastActionUseCount}");
+            Service.ChatGui.Print($"You just used: {LastAction} {GetActionName(LastAction)} x{LastActionUseCount}");
         }
 
         public static void Dispose()

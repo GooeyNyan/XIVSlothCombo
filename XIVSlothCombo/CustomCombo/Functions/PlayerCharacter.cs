@@ -29,6 +29,6 @@ namespace XIVSlothCombo.CustomComboNS.Functions
 
         /// <summary> Checks if the player is in a PVP enabled zone. </summary>
         /// <returns> A value indicating whether the player is in a PVP enabled zone. </returns>
-        public static bool InPvP() => false;
+        public static bool InPvP() => true;
     }
 }

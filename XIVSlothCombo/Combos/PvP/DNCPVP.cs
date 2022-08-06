@@ -1,40 +1,49 @@
+using Dalamud.Game.ClientState.JobGauge.Types;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.CustomComboNS;
+using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Combos.PvP
 {
     internal static class DNCPvP
     {
         public const byte JobID = 38;
+        // public const byte JobID = 18;
 
         internal const uint
             FountainCombo = 54,
-            Cascade = 29416,
-            Fountain = 29417,
-            ReverseCascade = 29418,
-            Fountainfall = 29419,
-            SaberDance = 29420,
-            StarfallDance = 29421,
-            HoningDance = 29422,
-            HoningOvation = 29470,
-            FanDance = 29428,
-            CuringWaltz = 29429,
-            EnAvant = 29430,
-            ClosedPosition = 29431,
-            Contradance = 29432;
+            Cascade = 17756,
+            Fountain = 17757,
+            ReverseCascade = 17758,
+            Fountainfall = 17759,
+            SaberDance = 17760,
+            FanDance = 17761,
+            FanDanceii = 18997,
+            FanDanceiii = 17762,
+            CuringWaltz = 17763,
+            StandardStep = 17766,
+            TechnicalStep = 17824,
+            Emboite = 17767,
+            Entrechat = 17768,
+            Jete = 17769,
+            Pirouette = 17770,
+            Focus = 18955,
+            HeadGraze = 17680,
+            Recuperate = 18928,
+            MedicalKit = 18943;
 
         internal class Buffs
         {
             internal const ushort
-                EnAvant = 2048,
-                FanDance = 2052,
-                Bladecatcher = 3159,
-                FlourishingSaberDance = 3160,
-                StarfallDance = 3161,
-                HoningDance = 3162,
-                Acclaim = 3163,
-                HoningOvation = 3164;
+                StandardStep = 2023,
+                StandardFinish = 2024,
+                TechnicalStep = 2049,
+                TechnicalFinish = 2050,
+                FanDanceiiiReady = 2021,
+                FanDanceiii = 2052,
+                SaberDance = 2022,
+                Focus = 2186;
         }
         public static class Config
         {
@@ -50,39 +59,65 @@ namespace XIVSlothCombo.Combos.PvP
             {
                 if (actionID is Cascade or Fountain or ReverseCascade or Fountainfall)
                 {
-                    bool starfallDanceReady = !GetCooldown(StarfallDance).IsCooldown;
-                    bool starfallDance = HasEffect(Buffs.StarfallDance);
+                    DNCGauge? gauge = GetJobGauge<DNCGauge>();
+
+                    bool standardStepReady = !GetCooldown(StandardStep).IsCooldown;
+                    bool technicalStep = !GetCooldown(TechnicalStep).IsCooldown;
                     bool curingWaltzReady = !GetCooldown(CuringWaltz).IsCooldown;
-                    bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
-                    var acclaimStacks = GetBuffStacks(Buffs.Acclaim);
+                    bool focusReady= !GetCooldown(Focus).IsCooldown;
+                    bool headGrazeReady = !GetCooldown(HeadGraze).IsCooldown;
+                    bool recuperateReady = !GetCooldown(Recuperate).IsCooldown;
+                    
+                    bool saberDance = HasEffect(Buffs.SaberDance);
+                    bool fanDanceiii = HasEffect(Buffs.FanDanceiiiReady);
+                    bool focus = HasEffect(Buffs.Focus);
+
+                    ushort fanDanceiiiCharges = GetRemainingCharges(FanDanceiii);
+                    ushort medicalKitCharges = GetRemainingCharges(MedicalKit);
+
                     bool canWeave = CanWeave(actionID);
                     var distance = GetTargetDistance();
                     var HPThreshold = PluginConfiguration.GetCustomIntValue(Config.DNCPvP_WaltzThreshold);
                     var HP = PlayerHealthPercentageHp();
 
-                    // Honing Dance Option
-                    if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && distance <= 5)
-                    {
-                        if (HasEffect(Buffs.Acclaim) && acclaimStacks < 4)
-                            return WHM.Assize;
-
-                        return HoningDance;
-                    }
-
                     if (canWeave)
                     {
-                        // Curing Waltz Option
-                        if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_CuringWaltz) && curingWaltzReady && HP <= HPThreshold)
-                            return OriginalHook(CuringWaltz);
-
-                        // Fan Dance weave
-                        if (IsOffCooldown(FanDance) && distance < 13) // 2y below max to avoid waste
+                        if (fanDanceiiiCharges >= 1 && fanDanceiii)
+                            return OriginalHook(FanDanceiii);
+                        if (gauge.Feathers > 0)
                             return OriginalHook(FanDance);
+                        if (headGrazeReady && HasTarget())
+                            return OriginalHook(HeadGraze);
+                        if (HP <= HPThreshold)
+                        {
+                            if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_CuringWaltz) && curingWaltzReady)
+                                return OriginalHook(CuringWaltz);
+                            if (medicalKitCharges >= 1)
+                                return OriginalHook(MedicalKit);
+                            if (recuperateReady)
+                                return OriginalHook(Recuperate);
+                        }
                     }
 
-                    // Starfall Dance
-                    if (!starfallDance && starfallDanceReady && distance < 20) // 5y below max to avoid waste
-                        return OriginalHook(StarfallDance);
+                    if (gauge.Esprit >= 50)
+                    {
+                        if (!saberDance)
+                        {
+                            return OriginalHook(SaberDance);
+                        }
+                        if (!focus && (focusReady || GetCooldown(Focus).CooldownRemaining < 0.5))
+                        {
+                            return OriginalHook(Focus);
+                        }
+                        return OriginalHook(SaberDance);
+                    }
+                } else if (actionID is Focus)
+                {
+                    bool focus = HasEffect(Buffs.Focus);
+                    if (focus)
+                    {
+                        return OriginalHook(SaberDance);
+                    }
                 }
 
                 return actionID;
