@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.Core;
+using System.Runtime.InteropServices;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -311,6 +312,7 @@ namespace XIVSlothCombo.Combos.PvE
                             //(High) Jump AoE Feature
                             if (IsEnabled(CustomComboPreset.DRG_AoE_HighJump) && ActionReady(OriginalHook(Jump)) && CanWeave(actionID, 1))
                                 return OriginalHook(Jump);
+                            }
 
                             //Mirage Dive Feature
                             if (IsEnabled(CustomComboPreset.DRG_AoE_Mirage) && HasEffect(Buffs.DiveReady))
@@ -319,7 +321,7 @@ namespace XIVSlothCombo.Combos.PvE
                             //Life Surge AoE Feature
                             if (IsEnabled(CustomComboPreset.DRG_AoE_LifeSurge) &&
                                 !HasEffect(Buffs.LifeSurge) && GetRemainingCharges(LifeSurge) > 0 && (HasEffect(Buffs.LanceCharge) || HasEffect(Buffs.RightEye)) &&
-                                ((lastComboMove is CoerthanTorment && LevelChecked(CoerthanTorment)) ||
+                                (lastComboMove is CoerthanTorment && LevelChecked(CoerthanTorment) ||
                                 (lastComboMove is SonicThrust && LevelChecked(SonicThrust) && !LevelChecked(CoerthanTorment)) ||
                                 (lastComboMove is DoomSpike && !LevelChecked(SonicThrust))))
                                 return LifeSurge;
