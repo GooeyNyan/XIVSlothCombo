@@ -1,7 +1,6 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.Core;
-using System.Runtime.InteropServices;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -77,7 +76,7 @@ namespace XIVSlothCombo.Combos.PvE
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_Jump;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => 
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
                 actionID is DRG.Jump or DRG.HighJump && HasEffect(DRG.Buffs.DiveReady) ? DRG.MirageDive : actionID;
         }
 
@@ -135,7 +134,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     if (openerOptions is 2 && IsOffCooldown(Geirskogul))
                                         return OriginalHook(Geirskogul);
                                 }
-                                    
+
                                 if (WasLastWeaponskill(WheelingThrust))
                                 {
                                     if (openerOptions is 0 or 1 && IsOffCooldown(Geirskogul))
@@ -167,7 +166,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     if (openerOptions is 2 && GetRemainingCharges(SpineshatterDive) > 0 && !WasLastAction(SpineshatterDive))
                                         return SpineshatterDive;
                                 }
-                                    
+
                                 if (WasLastWeaponskill(VorpalThrust) && openerOptions is 0 or 1 or 2)
                                 {
                                     if (GetRemainingCharges(LifeSurge) > 0 && !HasEffect(Buffs.LifeSurge))
@@ -184,7 +183,7 @@ namespace XIVSlothCombo.Combos.PvE
                         if (!inOpener)
                         {
                             if (CanWeave(actionID))
-                            {                                
+                            {
                                 if (HasEffect(Buffs.PowerSurge))
                                 {
                                     //Wyrmwind Thrust Feature
@@ -312,7 +311,6 @@ namespace XIVSlothCombo.Combos.PvE
                             //(High) Jump AoE Feature
                             if (IsEnabled(CustomComboPreset.DRG_AoE_HighJump) && ActionReady(OriginalHook(Jump)) && CanWeave(actionID, 1))
                                 return OriginalHook(Jump);
-                            }
 
                             //Mirage Dive Feature
                             if (IsEnabled(CustomComboPreset.DRG_AoE_Mirage) && HasEffect(Buffs.DiveReady))
@@ -321,7 +319,7 @@ namespace XIVSlothCombo.Combos.PvE
                             //Life Surge AoE Feature
                             if (IsEnabled(CustomComboPreset.DRG_AoE_LifeSurge) &&
                                 !HasEffect(Buffs.LifeSurge) && GetRemainingCharges(LifeSurge) > 0 && (HasEffect(Buffs.LanceCharge) || HasEffect(Buffs.RightEye)) &&
-                                (lastComboMove is CoerthanTorment && LevelChecked(CoerthanTorment) ||
+                                ((lastComboMove is CoerthanTorment && LevelChecked(CoerthanTorment)) ||
                                 (lastComboMove is SonicThrust && LevelChecked(SonicThrust) && !LevelChecked(CoerthanTorment)) ||
                                 (lastComboMove is DoomSpike && !LevelChecked(SonicThrust))))
                                 return LifeSurge;
