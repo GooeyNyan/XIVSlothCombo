@@ -5,7 +5,6 @@ using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Extensions;
 using static XIVSlothCombo.Combos.JobHelpers.NIN;
-using System.Runtime.InteropServices;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -162,7 +161,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected internal NINOpenerLogic openerLogic = new NINOpenerLogic();
 
-            protected override unsafe uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID == SpinningEdge)
                 {
@@ -447,7 +446,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected internal MudraCasting mudraState = new MudraCasting();
 
-            protected override unsafe uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID == DeathBlossom)
                 {
@@ -611,7 +610,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected internal NINOpenerLogic openerLogic = new NINOpenerLogic();
 
-            protected override unsafe uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID == SpinningEdge)
                 {
@@ -728,7 +727,7 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected internal MudraCasting mudraState = new MudraCasting();
 
-            protected override unsafe uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID == DeathBlossom)
                 {
